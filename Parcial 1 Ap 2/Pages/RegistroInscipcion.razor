@@ -21,7 +21,7 @@
 
     <div class="form-group">
         <label for="Limite">Limite</label>
-        <InputNumber @bind-Value="@inscripcion.Limite" class="form-control " @onmouseout="CalcularDisponibles"/>
+        <InputNumber @bind-Value="@inscripcion.Limite" class="form-control" @onmouseout="CalcularDisponibles"/>
         <ValidationMessage For="@(() => inscripcion.Limite)" />
     </div>
 
@@ -33,7 +33,7 @@
 
     <div class="form-group">
         <label for="Disponibles">Disponibles</label> 
-        <InputNumber  @bind-Value="@inscripcion.Disponibles" />
+        <InputNumber  @bind-Value="@inscripcion.Disponibles" ReadOnly="true" />
         <ValidationMessage For="@(() => inscripcion.Disponibles)" />
     </div>
 
