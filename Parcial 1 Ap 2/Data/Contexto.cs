@@ -9,7 +9,7 @@ namespace Parcial_1_Ap_2.Data
 {
     public class Contexto : DbContext
     {
-        public DbSet<Inscripcion> inscripciones { get; set; }
+        public DbSet<Inscripcion> Inscripcion { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite(@"Data Source= Database/Inscripcion.db");

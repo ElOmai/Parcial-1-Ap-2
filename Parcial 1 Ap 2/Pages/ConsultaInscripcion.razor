@@ -1,5 +1,74 @@
-﻿<h3>ConsultaInsccipcion</h3>
+﻿@page "/ConsultaInscripcion"
+@using Controllers
+@using Models
+<h3>Consulta de Inscripciones</h3>
+
+<div class="container">
+    <h3 class="text-center display-4">Consulta de Inscripciones</h3>
+    @if (Lista.Count <= 0)
+    {
+        <p class="display-3 text-center">Cargando......</p>
+    }
+    else
+    {
+        <div>
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Semestre</th>
+                        <th scope="col">Limite</th>
+                        <th scope="col">Tomados</th>
+                        <th scope="col">Disponibles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var obj in Lista)
+                    {
+                        <tr>
+                            <td scope="row">@obj.InscripcionId</td>
+                            <td>@obj.Semestre</td>
+                            <td>@obj.Limite</td>
+                            <td>@obj.Tomados</td>
+                            <td>@obj.Disponibles</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    }
+
+</div>
+
 
 @code {
+
+
+    public List<Inscripcion> Lista { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Lista = new List<Inscripcion>();
+        await Task.Run(() => { CargarLista(); });
+
+    }
+
+    private void CargarLista()
+    {
+        InscripcionController db = new InscripcionController();
+
+        try
+        {
+            Lista = db.GetInscripcion(A => true);
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
+
 
 }

@@ -1,5 +1,121 @@
-﻿<h3>Registro de Inscripciones</h3>
+﻿@page "/RegistroInscripcion"
+@using Controllers
+@using Models
+@using Data
+<h3>Registro de Inscripciones</h3>
+<EditForm Model="inscripcion" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label for="id">Inscripcion Id</label>
+        <InputNumber @bind-Value="@inscripcion.InscripcionId" class="form-control" />
+        <ValidationMessage For="@(() => inscripcion.InscripcionId)" />
+        <button type="button" class="btn btn-secondary" @onclick="Buscar">Buscar</button>
+    </div>
+
+    <div class="form-group">
+        <label for="Semestre">Semestre</label>
+        <InputText @bind-Value="@inscripcion.Semestre" class="form-control" />
+        <ValidationMessage For="@(() => inscripcion.Semestre)" />
+    </div>
+
+    <div class="form-group">
+        <label for="Limite">Limite</label>
+        <InputNumber @bind-Value="@inscripcion.Limite" class="form-control " @onmouseout="CalcularDisponibles"/>
+        <ValidationMessage For="@(() => inscripcion.Limite)" />
+    </div>
+
+    <div class="form-group">
+        <label for="Tomados">Tomados</label>
+        <InputNumber @bind-Value="@inscripcion.Tomados" class="form-control" @onmouseout="CalcularDisponibles"  />
+        <ValidationMessage For="@(() => inscripcion.Tomados)" />
+    </div>
+
+    <div class="form-group">
+        <label for="Disponibles">Disponibles</label> 
+        <InputNumber  @bind-Value="@inscripcion.Disponibles" />
+        <ValidationMessage For="@(() => inscripcion.Disponibles)" />
+    </div>
+
+    <div>
+        <button class="btn btn-primary" type="button" @onclick="Limpiar">Limpiar</button>
+        <button class="btn btn-success" type="submit">Guardar</button>
+        <button class="btn btn-danger" type="button" @onclick="Eliminar">Eliminar</button>
+    </div>
+
+    <h5>@mensaje</h5>
+
+
+</EditForm>
 
 @code {
 
+    public Inscripcion inscripcion = new Inscripcion();
+    public string mensaje = "";
+
+    public void Guardar()
+    {
+        InscripcionController controller = new InscripcionController();
+
+        if (controller.Guardar(inscripcion))
+        {
+            this.inscripcion = new Inscripcion();
+            mensaje = "Inscripcion Guardada";
+        }
+        else
+        {
+            this.inscripcion = new Inscripcion();
+            mensaje = "Error al guardar";
+        }
+    }
+
+    public void Buscar()
+    {
+        InscripcionController controller = new InscripcionController();
+
+        var Inscripcion = controller.Buscar(inscripcion.InscripcionId);
+
+        if (Inscripcion != null)
+        {
+            inscripcion = Inscripcion;
+        }
+        else
+        {
+            this.inscripcion = new Inscripcion();
+            mensaje = "Inscripcion no encontrada";
+        }
+    }
+
+    public void Eliminar()
+    {
+        InscripcionController controller = new InscripcionController();
+
+        var Inscripcion = controller.Buscar(inscripcion.InscripcionId);
+
+        if (Inscripcion != null)
+        {
+            if (controller.Eliminar(Inscripcion.InscripcionId))
+            {
+                this.inscripcion = new Inscripcion();
+                mensaje = "Inscripcion Eliminado";
+            }
+            else
+            {
+                this.inscripcion = new Inscripcion();
+                mensaje = "Error al Eliminar";
+            }
+        }
+    }
+    private void Limpiar()
+    {
+        inscripcion = new Inscripcion();
+    }
+
+    public void CalcularDisponibles()
+    {
+        if (inscripcion != null)
+        {
+            inscripcion.Disponibles = inscripcion.Limite - inscripcion.Tomados;
+        }
+    }
 }
